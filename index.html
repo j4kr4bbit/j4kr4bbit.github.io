@@ -1,0 +1,138 @@
+<head>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        #time-log {
+            position: absolute;
+            font-size: 12px;
+            font-family: sans-serif;
+            padding: 5px;
+            border-radius: 3px;
+            background-color: rgba(200, 200, 200, 0.1);
+            color: lavender;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        #freeze-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 9999; /* Ensure button is on top */
+        }
+
+        .satellite-info-box {
+            position: absolute;
+            display: none;
+            padding: 10px;
+            border: 1px solid black;
+            background-color: white;
+            border-radius: 5px;
+        }
+    </style>
+
+    <script src="//unpkg.com/satellite.js/dist/satellite.min.js"></script>
+    <script src="//unpkg.com/globe.gl"></script>
+</head>
+
+<body>
+    <div id="chart"></div>
+    <div id="time-log"></div>
+    <button id="freeze-button">Freeze</button> <!-- Freeze button added -->
+    <div id="satellite-info-box" class="satellite-info-box"></div> <!-- Satellite info box -->
+
+    <script type="module">
+        import * as THREE from '//unpkg.com/three/build/three.module.js';
+
+        const EARTH_RADIUS_KM = 6371; // km
+        const SAT_SIZE = 100; // km
+        const TIME_STEP = 3 * 1000; // per frame
+
+        let isFrozen = false; // Variable to track freeze state, moved outside to be globally accessible
+
+        const timeLogger = document.getElementById('time-log');
+        const freezeButton = document.getElementById('freeze-button'); // Freeze button
+        const satelliteInfoBox = document.getElementById('satellite-info-box'); // Satellite info box
+
+        const world = Globe()
+            (document.getElementById('chart'))
+            .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+            .objectLat('lat')
+            .objectLng('lng')
+            .objectAltitude('alt')
+            .objectFacesSurface(false)
+            .objectLabel('name');
+
+        setTimeout(() => world.pointOfView({ altitude: 3.5 }));
+
+        const satGeometry = new THREE.OctahedronGeometry(SAT_SIZE * world.getGlobeRadius() / EARTH_RADIUS_KM / 2, 0);
+        const satMaterial = new THREE.MeshLambertMaterial({ color: 'palegreen', transparent: true, opacity: 0.7 });
+        world.objectThreeObject(() => new THREE.Mesh(satGeometry, satMaterial));
+
+        fetch('./space-track-leo.txt').then(r => r.text()).then(rawData => {
+            const tleData = rawData.replace(/\r/g, '')
+                .split(/\n(?=[^12])/)
+                .filter(d => d)
+                .map(tle => tle.split('\n'));
+            const satData = tleData.map(([name, ...tle]) => ({
+                satrec: satellite.twoline2satrec(...tle),
+                name: name.trim().replace(/^0 /, ''),
+                color: 'palegreen' // Initial color for all satellites
+            }))
+                .filter(d => !!satellite.propagate(d.satrec, new Date()).position)
+                .slice(0, 2000);
+
+            let time = new Date();
+
+            // Event listener for freeze button
+            freezeButton.addEventListener('click', () => {
+                isFrozen = !isFrozen; // Toggle freeze state
+                freezeButton.textContent = isFrozen ? 'Unfreeze' : 'Freeze';
+            });
+
+            // Event listener for clicking on a satellite
+            world.onObjectClick((obj) => {
+                if (isFrozen) {
+                    // Zoom in to the clicked satellite
+                    world.pointOfView({
+                        lat: obj.lat,
+                        lng: obj.lng,
+                        altitude: 0.5, // Closer altitude for better zoom
+                        duration: 2000 // Animation duration
+                    });
+
+                    // Change the color of the clicked satellite to red
+                    const updatedSatData = satData.map(satellite => ({
+                        ...satellite,
+                        color: satellite.name === obj.name ? 'red' : 'palegreen'
+                    }));
+                    world.objectsData(updatedSatData);
+                }
+            });
+
+            (function frameTicker() {
+                requestAnimationFrame(frameTicker);
+
+                time = new Date(+time + TIME_STEP);
+                if (!isFrozen) {
+                    timeLogger.innerText = time.toString();
+                    const gmst = satellite.gstime(time);
+                    satData.forEach(d => {
+                        const eci = satellite.propagate(d.satrec, time);
+                        if (eci.position) {
+                            const gdPos = satellite.eciToGeodetic(eci.position, gmst);
+                            d.lat = satellite.radiansToDegrees(gdPos.latitude);
+                            d.lng = satellite.radiansToDegrees(gdPos.longitude);
+                            d.alt = gdPos.height / EARTH_RADIUS_KM;
+                        }
+                    });
+
+                    world.objectsData(satData);
+                }
+            })();
+        });
+    </script>
+
+</body>
