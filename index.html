@@ -1,138 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <style>
-        body {
-            margin: 0;
-        }
-
-        #time-log {
-            position: absolute;
-            font-size: 12px;
-            font-family: sans-serif;
-            padding: 5px;
-            border-radius: 3px;
-            background-color: rgba(200, 200, 200, 0.1);
-            color: lavender;
-            bottom: 10px;
-            right: 10px;
-        }
-
-        #freeze-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 9999; /* Ensure button is on top */
-        }
-
-        .satellite-info-box {
-            position: absolute;
-            display: none;
-            padding: 10px;
-            border: 1px solid black;
-            background-color: white;
-            border-radius: 5px;
-        }
-    </style>
-
-    <script src="//unpkg.com/satellite.js/dist/satellite.min.js"></script>
-    <script src="//unpkg.com/globe.gl"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carr - Revolutionary Car NFT Ecosystem</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-
 <body>
-    <div id="chart"></div>
-    <div id="time-log"></div>
-    <button id="freeze-button">Freeze</button> <!-- Freeze button added -->
-    <div id="satellite-info-box" class="satellite-info-box"></div> <!-- Satellite info box -->
+    <nav class="navbar">
+        <div class="logo">CARR</div>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#technology">Technology</a></li>
+            <li><a href="#investment">Investment</a></li>
+            <li><a href="#roadmap">Roadmap</a></li>
+            <li><a href="#team">Team</a></li>
+        </ul>
+        <div class="connect-wallet">Connect Wallet</div>
+    </nav>
 
-    <script type="module">
-        import * as THREE from '//unpkg.com/three/build/three.module.js';
+    <header class="hero">
+        <div class="hero-content">
+            <h1>The Future of <span class="gradient-text">Automotive</span> Ownership</h1>
+            <p class="subtitle">Revolutionizing car ownership through blockchain technology, NFTs, and decentralized finance</p>
+            <div class="cta-buttons">
+                <button class="primary-btn">Explore NFTs</button>
+                <button class="secondary-btn">Investor Deck</button>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="car-model">
+                <!-- 3D car model or animation will load here via JavaScript -->
+            </div>
+        </div>
+    </header>
 
-        const EARTH_RADIUS_KM = 6371; // km
-        const SAT_SIZE = 100; // km
-        const TIME_STEP = 3 * 1000; // per frame
+    <main>
+        <section id="about" class="section">
+            <div class="section-header">
+                <h2>Redefining <span class="gradient-text">Ownership</span></h2>
+                <p>Carr creates a new paradigm for automotive assets</p>
+            </div>
+            <div class="feature-cards">
+                <div class="card">
+                    <i class="fas fa-car-side icon"></i>
+                    <h3>Fractional Ownership</h3>
+                    <p>Own a percentage of high-value vehicles and earn passive income through our revolutionary NFT contracts</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-chart-line icon"></i>
+                    <h3>Appreciating Assets</h3>
+                    <p>Unlike traditional cars that depreciate, our NFT-backed vehicles are designed for value growth</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-wallet icon"></i>
+                    <h3>Instant Liquidity</h3>
+                    <p>Trade your automotive assets anytime on our marketplace with zero friction</p>
+                </div>
+            </div>
+        </section>
 
-        let isFrozen = false; // Variable to track freeze state, moved outside to be globally accessible
+        <section id="technology" class="section dark">
+            <div class="section-header">
+                <h2>Powered by <span class="gradient-text">Innovation</span></h2>
+                <p>Our cutting-edge technology stack</p>
+            </div>
+            <div class="tech-showcase">
+                <div class="tech-item">
+                    <div class="tech-icon"><i class="fas fa-link"></i></div>
+                    <h3>Blockchain</h3>
+                    <p>Secure, transparent transactions and ownership records</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon"><i class="fas fa-robot"></i></div>
+                    <h3>AI Analytics</h3>
+                    <p>Predictive maintenance and valuation models</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon"><i class="fas fa-file-contract"></i></div>
+                    <h3>Smart Contracts</h3>
+                    <p>Automated revenue distribution and ownership transfers</p>
+                </div>
+            </div>
+        </section>
 
-        const timeLogger = document.getElementById('time-log');
-        const freezeButton = document.getElementById('freeze-button'); // Freeze button
-        const satelliteInfoBox = document.getElementById('satellite-info-box'); // Satellite info box
+        <section id="investment" class="section">
+            <div class="section-header">
+                <h2>Investment <span class="gradient-text">Opportunity</span></h2>
+                <p>Why Carr represents the future of automotive investment</p>
+            </div>
+            <div class="metrics-container">
+                <div class="metric">
+                    <div class="metric-value counter" data-target="6.5">0</div>
+                    <div class="metric-label">Trillion USD</div>
+                    <div class="metric-description">Global automotive market size</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value counter" data-target="300">0</div>
+                    <div class="metric-label">Million</div>
+                    <div class="metric-description">Connected vehicles by 2025</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value counter" data-target="25">0</div>
+                    <div class="metric-label">Percent</div>
+                    <div class="metric-description">Annual NFT market growth</div>
+                </div>
+            </div>
+            <div class="investor-benefits">
+                <h3>Investor Benefits</h3>
+                <ul class="benefits-list">
+                    <li><span class="check-icon">✓</span> Early access to platform token pre-sale</li>
+                    <li><span class="check-icon">✓</span> Revenue share from transaction fees</li>
+                    <li><span class="check-icon">✓</span> Governance rights in the Carr DAO</li>
+                    <li><span class="check-icon">✓</span> Exclusive access to limited edition car NFTs</li>
+                </ul>
+            </div>
+        </section>
 
-        const world = Globe()
-            (document.getElementById('chart'))
-            .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
-            .objectLat('lat')
-            .objectLng('lng')
-            .objectAltitude('alt')
-            .objectFacesSurface(false)
-            .objectLabel('name');
+        <section id="roadmap" class="section dark">
+            <div class="section-header">
+                <h2>Our <span class="gradient-text">Roadmap</span></h2>
+                <p>The journey to revolutionize automotive ownership</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item active">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>Q1 2023</h3>
+                        <p>Platform development, team building</p>
+                    </div>
+                </div>
+                <div class="timeline-item active">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>Q2 2023</h3>
+                        <p>Smart contract development, beta testing</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>Q3 2023</h3>
+                        <p>Initial NFT offering, marketplace launch</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>Q4 2023</h3>
+                        <p>Strategic partnerships, expansion</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-        setTimeout(() => world.pointOfView({ altitude: 3.5 }));
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">CARR</div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Whitepaper</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Connect</h4>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2023 Carr Protocol. All rights reserved.</p>
+        </div>
+    </footer>
 
-        const satGeometry = new THREE.OctahedronGeometry(SAT_SIZE * world.getGlobeRadius() / EARTH_RADIUS_KM / 2, 0);
-        const satMaterial = new THREE.MeshLambertMaterial({ color: 'palegreen', transparent: true, opacity: 0.7 });
-        world.objectThreeObject(() => new THREE.Mesh(satGeometry, satMaterial));
-
-        fetch('./space-track-leo.txt').then(r => r.text()).then(rawData => {
-            const tleData = rawData.replace(/\r/g, '')
-                .split(/\n(?=[^12])/)
-                .filter(d => d)
-                .map(tle => tle.split('\n'));
-            const satData = tleData.map(([name, ...tle]) => ({
-                satrec: satellite.twoline2satrec(...tle),
-                name: name.trim().replace(/^0 /, ''),
-                color: 'palegreen' // Initial color for all satellites
-            }))
-                .filter(d => !!satellite.propagate(d.satrec, new Date()).position)
-                .slice(0, 2000);
-
-            let time = new Date();
-
-            // Event listener for freeze button
-            freezeButton.addEventListener('click', () => {
-                isFrozen = !isFrozen; // Toggle freeze state
-                freezeButton.textContent = isFrozen ? 'Unfreeze' : 'Freeze';
-            });
-
-            // Event listener for clicking on a satellite
-            world.onObjectClick((obj) => {
-                if (isFrozen) {
-                    // Zoom in to the clicked satellite
-                    world.pointOfView({
-                        lat: obj.lat,
-                        lng: obj.lng,
-                        altitude: 0.5, // Closer altitude for better zoom
-                        duration: 2000 // Animation duration
-                    });
-
-                    // Change the color of the clicked satellite to red
-                    const updatedSatData = satData.map(satellite => ({
-                        ...satellite,
-                        color: satellite.name === obj.name ? 'red' : 'palegreen'
-                    }));
-                    world.objectsData(updatedSatData);
-                }
-            });
-
-            (function frameTicker() {
-                requestAnimationFrame(frameTicker);
-
-                time = new Date(+time + TIME_STEP);
-                if (!isFrozen) {
-                    timeLogger.innerText = time.toString();
-                    const gmst = satellite.gstime(time);
-                    satData.forEach(d => {
-                        const eci = satellite.propagate(d.satrec, time);
-                        if (eci.position) {
-                            const gdPos = satellite.eciToGeodetic(eci.position, gmst);
-                            d.lat = satellite.radiansToDegrees(gdPos.latitude);
-                            d.lng = satellite.radiansToDegrees(gdPos.longitude);
-                            d.alt = gdPos.height / EARTH_RADIUS_KM;
-                        }
-                    });
-
-                    world.objectsData(satData);
-                }
-            })();
-        });
-    </script>
-
+    <script src="script.js"></script>
 </body>
+</html> 
